@@ -5,7 +5,7 @@ const unusedFilename = require('unused-filename');
 
 const app = electron.app;
 
-function registerListener(win, opts = {}, cb = () => {}) {
+function registerListener(win, opts = {}, cb = () => {}, pg = (stat) => {}) {
 	const listener = (e, item, webContents) => {
 		const totalBytes = item.getTotalBytes();
 		const dir = opts.directory || app.getPath('downloads');
@@ -19,7 +19,12 @@ function registerListener(win, opts = {}, cb = () => {}) {
 		// item.getMimeType()
 
 		item.on('updated', () => {
-			win.setProgressBar(item.getReceivedBytes() / totalBytes);
+			var status = item.getReceivedBytes() / totalBytes;
+			win.setProgressBar(status);
+			
+			pg(status);
+			
+			
 		});
 
 		item.on('done', (e, state) => {
@@ -54,8 +59,8 @@ module.exports = (opts = {}) => {
 	});
 };
 
-module.exports.download = (win, url, opts) => new Promise((resolve, reject) => {
+module.exports.download = (win, url, opts, pg) => new Promise((resolve, reject) => {
 	opts = Object.assign({}, opts, {unregisterWhenDone: true});
-	registerListener(win, opts, (err, item) => err ? reject(err) : resolve(item));
+	registerListener(win, opts, (err, item) => err ? reject(err) : resolve(item), pg);
 	win.webContents.downloadURL(url);
 });
