@@ -8,7 +8,8 @@
 - One function call instead of having to manually implement a lot of [boilerplate](index.js).
 - Saves the file to the users Downloads directory instead of prompting.
 - Bounces the Downloads directory in the dock when done. *(macOS)*
-- Shows download progress. Example on macOS:
+- Handles multiple downloads.
+- Shows badge count *(macOS & Linux only)* and download progress. Example on macOS:
 
 <img src="screenshot.png" width="82">
 
@@ -16,7 +17,7 @@
 ## Install
 
 ```
-$ npm install --save electron-dl
+$ npm install electron-dl
 ```
 
 
@@ -89,12 +90,64 @@ Default: [User's downloads directory](http://electron.atom.io/docs/api/app/#appg
 
 Directory to save the file in.
 
+#### filename
+
+Type: `string`<br>
+Default: [`downloadItem.getFilename()`](https://electron.atom.io/docs/api/download-item/#downloaditemgetfilename)
+
+Name of the saved file.
+
+This option only makes sense for `electronDl.download()`.
+
+#### errorTitle
+
+Type: `string`<br>
+Default: `Download Error`
+
+Title of the error dialog. Can be customized for localization.
+
+#### errorMessage
+
+Type: `string`<br>
+Default: `The download of {filename} was interrupted`
+
+Message of the error dialog. `{filename}` is replaced with the name of the actual file. Can be customized for localization.
+
+#### onProgress
+
+Type: `Function`
+
+Optional callback that receives a number between `0` and `1` representing the progress of the current download.
+
+#### openFolderWhenDone
+
+Type: `boolean`<br>
+Default: `false`
+
+Reveal the downloaded file in the system file manager, and if possible, select the file.
+
+
+## Development
+
+After making changes, run the automated tests:
+
+```
+$ npm test
+```
+
+And before submitting a pull request, run the manual tests to manually verify that everything works:
+
+```
+npm start
+```
+
 
 ## Related
 
 - [electron-debug](https://github.com/sindresorhus/electron-debug) - Adds useful debug features to your Electron app
 - [electron-context-menu](https://github.com/sindresorhus/electron-context-menu) - Context menu for your Electron app
-- [electron-config](https://github.com/sindresorhus/electron-config) - Simple config handling for your Electron app or module
+- [electron-store](https://github.com/sindresorhus/electron-store) - Save and load data like user preferences, app state, cache, etc
+- [electron-unhandled](https://github.com/sindresorhus/electron-unhandled) - Catch unhandled errors and promise rejections in your Electron app
 
 
 ## License
