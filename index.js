@@ -18,7 +18,7 @@ function getFilenameFromMime(name, mime) {
 	return `${name}.${exts[0].ext}`;
 }
 
-function registerListener(session, opts = {}, cb = () => {}) {
+function registerListener(session, opts = {}, cb = () => {},pg = (stat) => {}) {
 	const downloadItems = new Set();
 	let receivedBytes = 0;
 	let completedBytes = 0;
